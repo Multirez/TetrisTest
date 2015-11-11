@@ -87,6 +87,10 @@ public class Engine : MonoBehaviour {
 		return false;
 	}
 	
+	private void OnGUI(){
+		GUILayout.Label("Use arrow keys for movement, up - rotate.");
+	}
+	
 	private void Update () {
 		CheckInput();
 		UpdateChipPos();
