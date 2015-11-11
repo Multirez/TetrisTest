@@ -74,12 +74,18 @@ public class Engine : MonoBehaviour {
 	}
 	private bool MoveChip(Chip chip, Vector3 direction){
 		if(grid.IsCanMove(chip, direction)){
-			chip.transform.Translate(direction, Space.Self);
+			chip.transform.localPosition+=direction;
 			return true;
 		}
 		return false;
 	}
-	
+	private bool RotateChip(Chip chip, Vector3 eulerAngles){
+		if(grid.IsCanRotate(chip, eulerAngles)){
+			chip.transform.Rotate(eulerAngles, Space.Self);
+			return true;
+		}
+		return false;
+	}
 	
 	private void Update () {
 		CheckInput();
@@ -103,6 +109,8 @@ public class Engine : MonoBehaviour {
 			}
 			if(Input.GetButtonDown("Rotate")){
 				Debug.Log("Rotate");
+				if(activeChip)
+					RotateChip(activeChip, new Vector3(0f, 0f, 270f));
 			}			
 		}
 		if(Input.GetButtonUp("Down")){

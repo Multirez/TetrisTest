@@ -47,6 +47,22 @@ public class Grid : MonoBehaviour{
 		}
 		return true;
 	}
+	public bool IsCanRotate(Chip chip, Vector3 eulerAngles){
+		Vector3 blockPos;
+		chip.transform.Rotate(eulerAngles, Space.Self);
+		foreach(Transform blockTrans in chip.blocks){
+			blockPos=transform.TransformPoint(blockTrans.position);
+			if(!gridRect.Contains(blockPos) || 
+				!IsPositionIsFree(blockPos))
+			{
+				chip.transform.Rotate(-eulerAngles, Space.Self);
+				return false;
+			}
+						
+		}
+		chip.transform.Rotate(-eulerAngles, Space.Self);
+		return true;
+	}
 	private bool IsPositionIsFree(Vector3 pos){
 		//Check grid position
 		int lineIndex=Mathf.RoundToInt(pos.y);
