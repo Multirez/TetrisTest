@@ -65,11 +65,8 @@ public class Engine : MonoBehaviour {
 			//calc move
 			if(activeChip==null){
 				UseNextChip();				
-			}else if(grid.IsCanMove(activeChip, Vector3.down)){
-				activeChip.transform.Translate(Vector3.down, Space.Self);
-			}else{
+			}else if(!MoveChip(activeChip, Vector3.down)){
 				grid.Add(activeChip);
-				grid.RemoveFilledLines();
 				activeChip=null;
 			}
 		}

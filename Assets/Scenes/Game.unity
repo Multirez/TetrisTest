@@ -41,7 +41,7 @@ RenderSettings:
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 5
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_LightmapsMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -203,6 +203,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockEtalon: {fileID: 462894, guid: 267e06150a37a1b40a311c30059ceada, type: 2}
+  lineEtalon: {fileID: 11474814, guid: 22a0c235619f5a94c802ad4b395a87fb, type: 2}
 --- !u!4 &673252021
 Transform:
   m_ObjectHideFlags: 0
@@ -265,7 +266,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: .279411793, g: .279411793, b: .279411793, a: .0196078438}
+  m_BackGroundColor: {r: .20588237, g: .20588237, b: .20588237, a: .0196078438}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0

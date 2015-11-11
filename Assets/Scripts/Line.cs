@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Line{
+public class Line : MonoBehaviour{
 
 	public Transform[] blocks;
 	
-	public Line(){
+	public void Awake(){
 		blocks=new Transform[Grid.width];
 	}
 	

@@ -6,13 +6,15 @@ public class Grid : MonoBehaviour{
 	public static int width=10;
 	
 	[Tooltip("Default block prefab.")]
-	public Transform blockEtalon;	
+	public Transform blockEtalon;
+	[Tooltip("Default line prefab.")]
+	public Line lineEtalon;
 		
 	private List<Line> lines=new List<Line>();// The lines contain info about all blocks from bottom to top.
-	private Rect gridRect;//to determine is movement is out of grid
+	private Rect gridRect;//to determine when movement is out of grid
 	
 	private void Awake(){
-		gridRect=new Rect(-0.45f, -0.45f, width+0.9f, height+0.9f);
+		gridRect=new Rect(-0.45f, -0.45f, width-0.1f, height+5);//height +5 due chips starts over grid, higher of the grid 
 	}
 
 	public bool IsGameOver(){
@@ -53,8 +55,11 @@ public class Grid : MonoBehaviour{
 	/// <summary>
 	/// Check grid lines and remove filled from lines list
 	/// </summary>
-	public void RemoveFilledLines(){
-		
+	private void RemoveFilledLines(Line[] checkList){
+		string s="";
+		for(int i=0; i<checkList.Length; i++)
+			s+=" "+lines.IndexOf(checkList[i]);
+		Debug.Log(s);
 	}
 	
 	/// <summary>
@@ -64,7 +69,36 @@ public class Grid : MonoBehaviour{
 	/// The chip is will be added.
 	/// </param>
 	public void Add(Chip toAdd){
-		
+		int lineIndex, blockIndex;
+		Vector3 blockPos;
+		Line tempLine;
+		HashSet<Line> affectedLines=new HashSet<Line>();
+		foreach(Transform blockTrans in toAdd.blocks){
+			blockPos=transform.TransformPoint(blockTrans.position);
+			lineIndex=Mathf.RoundToInt(blockPos.y);
+			if(lineIndex>=lines.Count){
+				for(int i=lineIndex-lines.Count; i>=0; i--){
+					tempLine=Instantiate(lineEtalon)as Line;
+					tempLine.transform.SetParent(transform);
+					tempLine.transform.rotation=Quaternion.identity;
+					tempLine.transform.localPosition=new Vector3(0f, i, 0f);
+					lines.Add(tempLine);					
+				}
+			}
+			tempLine=lines[lineIndex];
+			affectedLines.Add(tempLine);
+			
+			blockIndex=Mathf.RoundToInt(blockPos.x);
+			tempLine.blocks[blockIndex]=blockTrans;
+			blockTrans.SetParent(tempLine.transform);
+		}
+		//remove chip
+		toAdd.blocks.Clear();
+		Destroy(toAdd.gameObject);
+		//check lines for remove
+		Line[] checkList=new Line[affectedLines.Count];
+		affectedLines.CopyTo(checkList);
+		RemoveFilledLines(checkList);
 	}
 	
 	public void OnDrawGizmos(){
