@@ -7,13 +7,13 @@ public class Grid : MonoBehaviour{
 	
 	[Tooltip("Default block prefab.")]
 	public Transform blockEtalon;	
+		
+	private List<Line> lines=new List<Line>();// The lines contain info about all blocks from bottom to top.
+	private Rect gridRect;//to determine is movement is out of grid
 	
-	
-	/// <summary>
-	/// The lines contain info about all blocks from bottom to top.
-	/// </summary>
-	private List<Line> lines=new List<Line>();
-	
+	private void Awake(){
+		gridRect=new Rect(-0.45f, -0.45f, width+0.9f, height+0.9f);
+	}
 
 	public bool IsGameOver(){
 		return lines.Count >= height;
@@ -35,10 +35,18 @@ public class Grid : MonoBehaviour{
 	/// <returns>
 	/// <c>true</c> if this chip is can move down; otherwise, <c>false</c>.
 	/// </returns>
-	public bool IsCanMove(Chip activeChip){
-		//TODO: Check chip pos for moving
-		if(activeChip.transform.localPosition.y <= 0f)
-			return false;
+	public bool IsCanMove(Chip activeChip, Vector3 direction){
+		Vector3 newBlockPos;
+		foreach(Transform blockTrans in activeChip.blocks){
+			newBlockPos=transform.TransformPoint(blockTrans.position)+direction;
+			if(!gridRect.Contains(newBlockPos) || 
+				!IsPositionIsFree(newBlockPos))
+				return false;			
+		}		
+		return true;
+	}
+	private bool IsPositionIsFree(Vector3 pos){
+		//TODO: Check grid position
 		return true;
 	}
 	

@@ -65,7 +65,7 @@ public class Engine : MonoBehaviour {
 			//calc move
 			if(activeChip==null){
 				UseNextChip();				
-			}else if(grid.IsCanMove(activeChip)){
+			}else if(grid.IsCanMove(activeChip, Vector3.down)){
 				activeChip.transform.Translate(Vector3.down, Space.Self);
 			}else{
 				grid.Add(activeChip);
@@ -75,6 +75,14 @@ public class Engine : MonoBehaviour {
 		}
 		lastMoveTimePoint=Time.time-timeStep;
 	}
+	private bool MoveChip(Chip chip, Vector3 direction){
+		if(grid.IsCanMove(chip, direction)){
+			chip.transform.Translate(direction, Space.Self);
+			return true;
+		}
+		return false;
+	}
+	
 	
 	private void Update () {
 		CheckInput();
@@ -84,9 +92,13 @@ public class Engine : MonoBehaviour {
 		if(Input.anyKeyDown){
 			if(Input.GetButtonDown("Left")){
 				Debug.Log("Left");
+				if(activeChip)
+					MoveChip(activeChip, Vector3.left);
 			}
 			if(Input.GetButtonDown("Right")){
 				Debug.Log("Right");
+				if(activeChip)
+					MoveChip(activeChip, Vector3.right);
 			}
 			if(Input.GetButtonDown("Down")){
 				Debug.Log("Down");
