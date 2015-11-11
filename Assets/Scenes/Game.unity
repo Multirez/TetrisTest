@@ -128,11 +128,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 426666, guid: 9602c29466081bb469ac6da296f872b0, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 5.07000017
       objectReference: {fileID: 0}
     - target: {fileID: 426666, guid: 9602c29466081bb469ac6da296f872b0, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 9.97000027
       objectReference: {fileID: 0}
     - target: {fileID: 426666, guid: 9602c29466081bb469ac6da296f872b0, type: 2}
       propertyPath: m_LocalPosition.z
@@ -157,6 +157,10 @@ Prefab:
     - target: {fileID: 426666, guid: 9602c29466081bb469ac6da296f872b0, type: 2}
       propertyPath: m_RootOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 426666, guid: 9602c29466081bb469ac6da296f872b0, type: 2}
+      propertyPath: m_LocalScale.z
+      value: 2.00740027
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9602c29466081bb469ac6da296f872b0, type: 2}
@@ -250,6 +254,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockEtalon: {fileID: 462894, guid: 267e06150a37a1b40a311c30059ceada, type: 2}
   lineEtalon: {fileID: 11474814, guid: 22a0c235619f5a94c802ad4b395a87fb, type: 2}
+  backTrans: {fileID: 234359012}
 --- !u!4 &673252021
 Transform:
   m_ObjectHideFlags: 0
