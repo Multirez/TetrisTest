@@ -3,9 +3,19 @@ using System.Collections.Generic;
 
 public class Line{
 
-	public Block[] blocks;
+	public Transform[] blocks;
 	
 	public Line(){
-		blocks=new Block[Grid.width];
+		blocks=new Transform[Grid.width];
+	}
+	
+	/// <summary>
+	/// Destroy all blocks at line.
+	/// </summary>
+	public void Clear(){
+		foreach(Transform block in blocks){
+			if(block)
+				MonoBehaviour.Destroy(block.gameObject);
+		}		
 	}
 }
