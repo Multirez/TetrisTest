@@ -44,12 +44,18 @@ public class Grid : MonoBehaviour{
 			if(!gridRect.Contains(newBlockPos) || 
 				!IsPositionIsFree(newBlockPos))
 				return false;			
-		}		
+		}
 		return true;
 	}
 	private bool IsPositionIsFree(Vector3 pos){
-		//TODO: Check grid position
-		return true;
+		//Check grid position
+		int lineIndex=Mathf.RoundToInt(pos.y);
+		if(lineIndex>=lines.Count)
+			return true;//the grid is not contain line with this index it's means avaliable positions
+		int blockIndex=Mathf.RoundToInt(pos.x);
+		if(lines[lineIndex].blocks[blockIndex]==null)
+			return true;//pos is not used
+		return false;		
 	}
 	
 	/// <summary>
