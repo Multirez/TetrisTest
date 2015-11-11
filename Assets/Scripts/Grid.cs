@@ -9,6 +9,8 @@ public class Grid : MonoBehaviour{
 	public Transform blockEtalon;
 	[Tooltip("Default line prefab.")]
 	public Line lineEtalon;
+	[Tooltip("Link to background for scale on start.")]
+	public Transform backTrans;
 		
 	private List<Line> lines=new List<Line>();// The lines contain info about all blocks from bottom to top.
 	private Rect gridRect;//to determine when movement is out of grid
@@ -16,7 +18,14 @@ public class Grid : MonoBehaviour{
 	private void Awake(){
 		gridRect=new Rect(-0.45f, -0.45f, width-0.1f, height+5);//height +5 due chips starts over grid, higher of the grid 
 	}
-
+	
+	private void Start(){
+		if(backTrans){
+			backTrans.localScale=new Vector3(width*0.1f, 1f, height*0.1f);
+			backTrans.localPosition=new Vector3(width*0.5f-0.5f, height*0.5f-0.5f, 0.5f);			
+		}
+	}
+	
 	public bool IsGameOver(){
 		return lines.Count >= height;
 	}
@@ -78,10 +87,18 @@ public class Grid : MonoBehaviour{
 	/// Check grid lines and remove filled from lines list
 	/// </summary>
 	private void RemoveFilledLines(Line[] checkList){
-		string s="";
-		for(int i=0; i<checkList.Length; i++)
-			s+=" "+lines.IndexOf(checkList[i]);
-		Debug.Log(s);
+		int lowLine=lines.Count-1;
+		foreach(Line line in checkList){
+			if(line.IsFilled()){
+				Debug.Log("Line is filled, remove it.");
+				lines.Remove(line);
+				lowLine=Mathf.Min(lowLine,
+					Mathf.RoundToInt(line.transform.localPosition.y));
+				line.Remove();
+			}
+		}
+		for(int i=lowLine; i<lines.Count; i++)
+			lines[i].UpdateLinePos(i);
 	}
 	
 	/// <summary>
@@ -103,7 +120,7 @@ public class Grid : MonoBehaviour{
 					tempLine=Instantiate(lineEtalon)as Line;
 					tempLine.transform.SetParent(transform);
 					tempLine.transform.rotation=Quaternion.identity;
-					tempLine.transform.localPosition=new Vector3(0f, i, 0f);
+					tempLine.transform.localPosition=new Vector3(0f, lines.Count, 0f);
 					lines.Add(tempLine);					
 				}
 			}
