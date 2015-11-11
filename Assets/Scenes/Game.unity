@@ -267,6 +267,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 3
+  forcedFactor: 7
   chipList:
   - {fileID: 11434324, guid: bb13edad5f32c824799ae78515a2309a, type: 2}
   - {fileID: 11472434, guid: 0e86031330545cc498aebf0e3d2be89f, type: 2}

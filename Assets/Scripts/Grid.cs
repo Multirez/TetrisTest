@@ -37,7 +37,8 @@ public class Grid : MonoBehaviour{
 	/// </returns>
 	public bool IsCanMove(Chip activeChip){
 		//TODO: Check chip pos for moving
-		
+		if(activeChip.transform.localPosition.y <= 0f)
+			return false;
 		return true;
 	}
 	
@@ -45,6 +46,16 @@ public class Grid : MonoBehaviour{
 	/// Check grid lines and remove filled from lines list
 	/// </summary>
 	public void RemoveFilledLines(){
+		
+	}
+	
+	/// <summary>
+	/// Add the chip blocks to grid.
+	/// </summary>
+	/// <param name='toAdd'>
+	/// The chip is will be added.
+	/// </param>
+	public void Add(Chip toAdd){
 		
 	}
 	

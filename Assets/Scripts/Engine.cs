@@ -6,6 +6,8 @@ public class Engine : MonoBehaviour {
 	
 	[Tooltip("Move down speed.")]
 	public float speed;
+	[Tooltip("Modifier accelerate gameplay by pressing the \"Down\".")]
+	public float forcedFactor;
 	[Tooltip("Avaliable chip types.")]
 	public List<Chip> chipList;
 	[Tooltip("Position for the show next chip type.")]
@@ -14,9 +16,10 @@ public class Engine : MonoBehaviour {
 	public Transform startChipPos;
 	
 	public Grid grid;
-	
+		
 	private Chip activeChip;
 	private Chip nextChip;
+	private float moveSpeed;//move speed equal speed or forcedSpeed
 	private float lastMoveTimePoint;
 		
 	private void Awake(){
@@ -24,6 +27,7 @@ public class Engine : MonoBehaviour {
 	}	
 	private void Start () {
 		StartGame();
+		moveSpeed=speed;
 	}
 	
 	private void Restart(){
@@ -33,7 +37,6 @@ public class Engine : MonoBehaviour {
 	private void StartGame(){
 		lastMoveTimePoint=Time.time;
 		CreateNextChip(chipList[Random.Range(0, chipList.Count)]);
-		UseNextChip();
 	}
 	private void CreateNextChip(Chip etalon){
 		if(nextChip!=null)
@@ -54,12 +57,23 @@ public class Engine : MonoBehaviour {
 		nextChip=null;
 		CreateNextChip(chipList[Random.Range(0, chipList.Count)]);
 	}
-	
 	private void UpdateChipPos(){
-		
-		if(grid.IsCanMove(activeChip)){
-			activeChip.transform.Translate(Vector3.down, Space.Self);
+		float timeStep=Time.time-lastMoveTimePoint;
+		float oneMoveTime=1f/moveSpeed;
+		while(timeStep > oneMoveTime){
+			timeStep-=oneMoveTime;
+			//calc move
+			if(activeChip==null){
+				UseNextChip();				
+			}else if(grid.IsCanMove(activeChip)){
+				activeChip.transform.Translate(Vector3.down, Space.Self);
+			}else{
+				grid.Add(activeChip);
+				grid.RemoveFilledLines();
+				activeChip=null;
+			}
 		}
+		lastMoveTimePoint=Time.time-timeStep;
 	}
 	
 	private void Update () {
@@ -76,10 +90,14 @@ public class Engine : MonoBehaviour {
 			}
 			if(Input.GetButtonDown("Down")){
 				Debug.Log("Down");
+				moveSpeed=speed*forcedFactor;
 			}
 			if(Input.GetButtonDown("Rotate")){
 				Debug.Log("Rotate");
 			}			
+		}
+		if(Input.GetButtonUp("Down")){
+			moveSpeed=speed;
 		}
 	}
 }
