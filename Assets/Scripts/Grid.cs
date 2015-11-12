@@ -88,9 +88,11 @@ public class Grid : MonoBehaviour{
 	/// </summary>
 	private void RemoveFilledLines(Line[] checkList){
 		int lowLine=lines.Count-1;
+		int count=0;
 		foreach(Line line in checkList){
 			if(line.IsFilled()){
-				Debug.Log("Line is filled, remove it.");
+				//Debug.Log("Line is filled, remove it.");
+				count++;
 				lines.Remove(line);
 				lowLine=Mathf.Min(lowLine,
 					Mathf.RoundToInt(line.transform.localPosition.y));
@@ -99,6 +101,10 @@ public class Grid : MonoBehaviour{
 		}
 		for(int i=lowLine; i<lines.Count; i++)
 			lines[i].UpdateLinePos(i);
+		
+		//update score		
+		if(count>0)
+			Engine.instance.AddScore(count);
 	}
 	
 	/// <summary>

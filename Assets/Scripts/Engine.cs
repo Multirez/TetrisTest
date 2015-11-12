@@ -1,13 +1,33 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class Engine : MonoBehaviour {
 	public static Engine instance;
 	
+	struct GameStats{
+		public int lines;
+		public float score;
+		
+		public void Reset(){
+			lines=0;
+			score=0f;
+		}
+	}
+	
 	[Tooltip("Move down speed.")]
 	public float speed;
 	[Tooltip("Modifier accelerate gameplay by pressing the \"Down\".")]
 	public float forcedFactor;
+	[Tooltip("Score if remove one line.")]
+	public float oneLineScore;
+	[Tooltip("If remove more then one line at ones will be combo." +
+		"\n Score = one * count * (base ^ (count - 1))" +
+		"\n where:" +
+		"\n - one - oneLineScore," +
+		"\n - count - lines removed at ones," +
+		"\n - base - comboScoreBase")]
+	public float comboScoreBase;
 	[Tooltip("Avaliable chip types.")]
 	public List<Chip> chipList;
 	[Tooltip("Position for the show next chip type.")]
@@ -16,12 +36,15 @@ public class Engine : MonoBehaviour {
 	public Transform startChipPos;
 	[Tooltip("Link to scene Grid object.")]
 	public Grid grid;
-		
-	private bool isPause=false;
+	[Tooltip("Link to UI Text with game stats info.")]
+	public Text statsText;
+			
+	private bool isPause;
 	private Chip activeChip;
 	private Chip nextChip;
 	private float moveSpeed;//move speed equal speed or forcedSpeed
 	private float lastMoveTimePoint;
+	private GameStats gameStats;
 		
 	private void Awake(){
 		instance=this;
@@ -43,6 +66,8 @@ public class Engine : MonoBehaviour {
 	}
 	private void StartGame(){
 		isPause=false;
+		gameStats.Reset();
+		OnStatsUpdate();
 		lastMoveTimePoint=Time.time;
 		CreateNextChip(chipList[Random.Range(0, chipList.Count)]);
 	}
@@ -96,7 +121,23 @@ public class Engine : MonoBehaviour {
 	}
 	
 	private void OnGUI(){
-		GUILayout.Label("Use arrow keys for movement, up - rotate.");
+		GUILayout.Label("Use arrow keys for movement, Up - rotate." +
+			" WASD - menu navigation, Space - confirm.");
+	}
+	
+	public void AddScore(int removedLinesCount){
+		gameStats.lines+=removedLinesCount;
+		gameStats.score+=removedLinesCount*oneLineScore*
+			Mathf.Pow(comboScoreBase, removedLinesCount-1);
+		OnStatsUpdate();
+	}
+	public void OnStatsUpdate(){
+		//need to update InfoText
+		if(statsText)
+			statsText.text=
+				"Level - 0"+
+				"\nScore - "+gameStats.score.ToString("0")+
+				"\nLines - "+gameStats.lines;
 	}
 	
 	private void Update(){
