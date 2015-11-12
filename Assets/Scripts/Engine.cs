@@ -14,9 +14,10 @@ public class Engine : MonoBehaviour {
 	public Transform nextChipPos;
 	[Tooltip("Start position for new chip.")]
 	public Transform startChipPos;
-	
+	[Tooltip("Link to scene Grid object.")]
 	public Grid grid;
 		
+	private bool isPause=false;
 	private Chip activeChip;
 	private Chip nextChip;
 	private float moveSpeed;//move speed equal speed or forcedSpeed
@@ -25,16 +26,23 @@ public class Engine : MonoBehaviour {
 	private void Awake(){
 		instance=this;
 	}	
-	private void Start () {
-		StartGame();
+	private void Start(){
 		moveSpeed=speed;
+		StartGame();
 	}
 	
-	private void Restart(){
+	public void RestartGame(){
 		grid.Clear();
+		if(activeChip)
+			Destroy(activeChip);
 		StartGame();
-	}	
+	}
+	public void PauseGame(){
+		isPause=!isPause;
+		lastMoveTimePoint=Time.time;
+	}
 	private void StartGame(){
+		isPause=false;
 		lastMoveTimePoint=Time.time;
 		CreateNextChip(chipList[Random.Range(0, chipList.Count)]);
 	}
@@ -91,7 +99,9 @@ public class Engine : MonoBehaviour {
 		GUILayout.Label("Use arrow keys for movement, up - rotate.");
 	}
 	
-	private void Update () {
+	private void Update(){
+		if(isPause)
+			return;
 		CheckInput();
 		UpdateChipPos();
 	}
