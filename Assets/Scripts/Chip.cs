@@ -24,7 +24,8 @@ public class Chip : MonoBehaviour {
 		Quaternion blockRotation=transform.rotation;
 		Transform newBlock;
 		foreach(Vector2 pos in blockPositions){
-			blockPos=transform.position+new Vector3(pos.x, pos.y, 0f);
+			blockPos=transform.position+
+				transform.TransformDirection(new Vector3(pos.x, pos.y, 0f));
 			newBlock=Instantiate(etalonBlock, blockPos, blockRotation) as Transform;
 			newBlock.SetParent(transform);
 			blocks.Add(newBlock);
