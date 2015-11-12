@@ -15,6 +15,7 @@ public class Engine : MonoBehaviour {
 		}
 	}
 	
+	#region Editor variables
 	[Tooltip("Move down speed.")]
 	public float speed;
 	[Tooltip("Modifier accelerate gameplay by pressing the \"Down\".")]
@@ -38,7 +39,12 @@ public class Engine : MonoBehaviour {
 	public Grid grid;
 	[Tooltip("Link to UI Text with game stats info.")]
 	public Text statsText;
-			
+//	[Tooltip("Link to Camera Screen Space Canvas.")]
+//	public RectTransform cameraCanvas;
+	[Tooltip("Link to UI Message Box.")]
+	public MessageBox messageBox;	
+	#endregion
+	
 	private bool isPause;
 	private Chip activeChip;
 	private Chip nextChip;
@@ -50,7 +56,6 @@ public class Engine : MonoBehaviour {
 		instance=this;
 	}	
 	private void Start(){
-		moveSpeed=speed;
 		StartGame();
 	}
 	
@@ -61,15 +66,27 @@ public class Engine : MonoBehaviour {
 		StartGame();
 	}
 	public void PauseGame(){
-		isPause=!isPause;
+		if(grid.IsGameOver()){
+			isPause=true;
+			messageBox.textObj.text="Game Over";
+		}else{
+			isPause=!isPause;			
+			messageBox.textObj.text="Pause";
+		}
+		messageBox.gameObject.SetActive(isPause);
 		lastMoveTimePoint=Time.time;
 	}
 	private void StartGame(){
-		isPause=false;
+		//reset stats
 		gameStats.Reset();
 		OnStatsUpdate();
+		//reset state
 		lastMoveTimePoint=Time.time;
 		CreateNextChip(chipList[Random.Range(0, chipList.Count)]);
+		moveSpeed=speed;
+		//if pause - unpause
+		if(isPause)
+			PauseGame();
 	}
 	private void CreateNextChip(Chip etalon){
 		if(nextChip!=null)
@@ -100,6 +117,8 @@ public class Engine : MonoBehaviour {
 				UseNextChip();				
 			}else if(!MoveChip(activeChip, Vector3.down)){
 				grid.Add(activeChip);
+				if(grid.IsGameOver())
+					PauseGame();
 				activeChip=null;
 			}
 		}
